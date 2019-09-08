@@ -1,0 +1,27 @@
+{
+  "name": "Friend-Finder",
+  "version": "1.0.0",
+  "description": "Full stack web application that allows users to find friends based on a personality test take on the site.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SarneetGit/Friend-Finder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SarneetGit/Friend-Finder/issues"
+  },
+  "homepage": "https://github.com/SarneetGit/Friend-Finder#readme",
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
