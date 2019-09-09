@@ -85,9 +85,28 @@ var friends = [{
     "scores": ["5", "5", "5", "5", "1", "3", "3", "5", "3", "3"]
 }]
 
+var test = [{
+    "name": "Ahmed",
+    "photo": "https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAq7AAAAJDAwYzI4NTQ4LWYwZWUtNGFkYS1hNTYwLTZjYzkwY2ViZDA3OA.jpg",
+    "scores": ["5", "1", "4", "4", "5", "1", "2", "5", "4", "1"]
+}, {
+    "name": "Jacob Deming",
+    "photo": "https://pbs.twimg.com/profile_images/691785039043022849/oWsy8LNR.jpg",
+    "scores": ["4", "2", "5", "1", "3", "2", "2", "1", "3", "2"]
+}, {
+    "name": "Jeremiah Scanlon",
+    "photo": "https://avatars2.githubusercontent.com/u/8504998?v=3&s=460",
+    "scores": ["5", "2", "2", "2", "4", "1", "3", "2", "5", "5"]
+}]
+
+
 //Setup express app
 var app = express();
 var PORT = process.env.PORT || 3000;
+
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+
 
 //Routes
 
@@ -106,7 +125,20 @@ app.get("/api/friends", function(req, res) {
     return res.json(friends)
 })
 
+app.get("/api/test", function(req, res) {
+    return res.json(test)
+})
+
+app.post("/api/test", function(req, res) {
+    var newFriend = req.body;
+    console.log(newFriend.score)
+    test.push(newFriend)
+    console.log('New Friend was Added');
+    res.json(test)
+})
+
 //Start the Server
 app.listen(PORT, function() {
     console.log(`App is listening on PORT ${PORT}`)
-})
+});
+
