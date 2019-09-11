@@ -131,9 +131,22 @@ app.get("/api/test", function(req, res) {
 
 app.post("/api/test", function(req, res) {
     var newFriend = req.body;
-    console.log(newFriend.score)
-    test.push(newFriend)
+    console.log(newFriend)
+    //test.push(newFriend)
+    let outerListDifference = []
+    for (let element of test) {
+        let difference = []
+        for (let i in element.scores) {
+            // let intI = parseInt(i)
+            console.log(newFriend.scores[i] , element.scores[i])
+            // console.log('line140'+newFriend.scores[intI], i)
+            difference.push(parseInt(newFriend.scores[i]) - parseInt(element.scores[i]))
+        }
+        console.log(Math.abs(difference.reduce((a,b) => a + b, 0)))
+        // Next I need to push each difference into an array along with the name of the friend from which I will return to the screen the image
+    }
     console.log('New Friend was Added');
+    
     res.json(test)
 })
 
