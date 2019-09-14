@@ -1,0 +1,1 @@
+INSERT INTO friends (friend_id, name, score) VALUES ('Sarneet', 'https://drive.google.com/open?id=1U3dbxHx-9LHAG4tgNMZzpPN2wq_T47_3', '["1","2","3","4","1","2","3","3","2","4"]');
