@@ -1,6 +1,7 @@
 //Package Dependencies
 const express = require("express");
 const path = require("path");
+const sql = require('mysql');
 
 //Friends Data (will be moved to DB)
 var test = [{
@@ -85,19 +86,8 @@ var test = [{
     "scores": ["5", "5", "5", "5", "1", "3", "3", "5", "3", "3"]
 }]
 
-var test2 = [{
-    "name": "Ahmed",
-    "photo": "https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAq7AAAAJDAwYzI4NTQ4LWYwZWUtNGFkYS1hNTYwLTZjYzkwY2ViZDA3OA.jpg",
-    "scores": ["5", "1", "4", "4", "5", "1", "2", "5", "4", "1"]
-}, {
-    "name": "Jacob Deming",
-    "photo": "https://pbs.twimg.com/profile_images/691785039043022849/oWsy8LNR.jpg",
-    "scores": ["4", "2", "5", "1", "3", "2", "2", "1", "3", "2"]
-}, {
-    "name": "Jeremiah Scanlon",
-    "photo": "https://avatars2.githubusercontent.com/u/8504998?v=3&s=460",
-    "scores": ["5", "2", "2", "2", "4", "1", "3", "2", "5", "5"]
-}]
+var friends = []
+
 
 
 //Setup express app
@@ -107,6 +97,33 @@ var PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+const connection = sql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "password",
+    database: "friend_finder_db"
+})
+
+connection.connect(function(err) {
+    if(err) {
+        console.log(`Error connecting: ${err.stack}`)
+        return;
+    }
+    console.log(`Connected as id: ${connection.threadId}`)
+})
+
+connection.query(`SELECT * FROM friend_finder_db.friends`, (err, data) => {
+    if (err) {
+        console.error(err)
+        return
+    }
+    friends = data
+    //Handle string -> list conversion for scores
+    for (let i of friends) {
+        i.score = i.score.replace(/\D/g,'').split("")
+    }
+})
 
 //Routes
 
@@ -126,7 +143,8 @@ app.get("/api/friends", function(req, res) {
 })
 
 app.get("/api/test", function(req, res) {
-    return res.json(test)
+    console.log(friends)
+    return res.json(friends)
 })
 
 app.post("/api/test", function(req, res) {
@@ -147,35 +165,20 @@ app.post("/api/test", function(req, res) {
         // Next I need to push each difference into an array along with the name of the friend from which I will return to the screen the image
     }
     let index = outerListDifference[0].index
-    test.push(newFriend)
-    // console.log(outerListDifference[0], test[outerListDifference[0].index])
-    console.log('New Friend was Added');
-    
+    //Add user to DB
+    connection.query('INSERT INTO friends (name, photo, score) VALUES (?, ?, ?);', [newFriend.name, newFriend.photo, newFriend.scores.join("")], function(err, data) {
+        if (err) {
+            console.error(err)
+            return
+        }
+        console.log(`Friend ${newFriend.name} was added correctly!`)
+    })
+    // test.push(newFriend)
+    //Send this info back to front end to display
+    console.log(outerListDifference[0], test[index])
+    console.log('New Friend was Added');    
     res.json(test[index])
 })
-
-
-// app.post("/api/test", function(req, res) {
-//     var newFriend = req.body;
-//     console.log(newFriend)
-//     var difference = []
-//     for (let iter in test) {
-//         for (let i in test[iter].scores) {
-//             // let intI = parseInt(i)
-//             console.log(newFriend.scores[i] , test[iter].scores[i])
-//             // console.log('line140'+newFriend.scores[intI], i)
-//             difference.push({difference : parseInt(newFriend.scores[i]) - parseInt(test[iter].scores[i]), index : iter})
-//         }
-//         // console.log(difference)
-//         // Next I need to push each difference into an array along with the name of the friend from which I will return to the screen the image
-//     }
-//     console.log(difference)
-//     // test.push(newFriend)
-//     console.log('New Friend was Added');
-    
-//     res.json(test)
-// })
-
 
 
 
