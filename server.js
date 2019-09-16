@@ -152,13 +152,13 @@ app.post("/api/test", function(req, res) {
     console.log(newFriend)
     //test.push(newFriend)
     let outerListDifference = []
-    for (let iter in test) {
+    for (let iter in friends) {
         let difference = []
-        for (let i in test[iter].scores) {
+        for (let i in friends[iter].scores) {
             // let intI = parseInt(i)
-            console.log(newFriend.scores[i] , test[iter].scores[i])
+            console.log(newFriend.scores[i] , friends[iter].scores[i])
             // console.log('line140'+newFriend.scores[intI], i)
-            difference.push(parseInt(newFriend.scores[i]) - parseInt(test[iter].scores[i]))
+            difference.push(parseInt(newFriend.scores[i]) - parseInt(friends[iter].scores[i]))
         }
         outerListDifference.push({difference : Math.abs(difference.reduce((a,b) => a + b, 0)), index : parseInt(iter)})
         outerListDifference.sort((a, b) => (a.difference > b.difference) ? 1 : -1)
@@ -175,9 +175,9 @@ app.post("/api/test", function(req, res) {
     })
     // test.push(newFriend)
     //Send this info back to front end to display
-    console.log(outerListDifference[0], test[index])
+    console.log(outerListDifference[0], friends[index])
     console.log('New Friend was Added');    
-    res.json(test[index])
+    res.json(friends[index])
 })
 
 
