@@ -128,11 +128,12 @@ connection.query(`SELECT * FROM friend_finder_db.friends`, (err, data) => {
 //Routes
 
 //Home
-app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "/app/public/home.html"))
-})
+// app.use("/", 
+//     express.static(path.join(__dirname, "/public"))
+// )
+app.use(express.static(path.join(__dirname, './app/public')));
 
-//Survey
+// //Survey
 app.get("/survey", function(req, res) {
     res.sendFile(path.join(__dirname, "/app/public/survey.html"))
 })
