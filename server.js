@@ -143,15 +143,14 @@ app.get("/api/friends", function(req, res) {
     return res.json(friends)
 })
 
-app.get("/api/test", function(req, res) {
-    console.log(friends)
+app.get("/api/friends", function(req, res) {
+    // console.log(friends)
     return res.json(friends)
 })
 
 app.post("/api/test", function(req, res) {
     var newFriend = req.body;
     console.log(newFriend)
-    //test.push(newFriend)
     let outerListDifference = []
     for (let iter in friends) {
         let difference = []
