@@ -17,11 +17,14 @@
     <!-- JQuery -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js">
+    </script>
     <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.9/js/mdb.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.9/js/mdb.min.js">
+    </script>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Bree+Serif&display=swap" rel="stylesheet">
@@ -31,6 +34,20 @@
 
     <!-- Font Awesome Glyphicons -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+    <!-- Alertify JS -->
+        <!-- JavaScript -->
+        <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.4/build/alertify.min.js"></script>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.4/build/css/alertify.min.css"/>
+        <!-- Default theme -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.4/build/css/themes/default.min.css"/>
+        <!-- Semantic UI theme -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.4/build/css/themes/semantic.min.css"/>
+        <!-- Bootstrap theme -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.4/build/css/themes/bootstrap.min.css"/>
+    <!-- END Alertify JS -->
 
 
 </head>
@@ -236,20 +253,21 @@
     <div id="results-modal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">                
-                <h2 class="modal-title text-center"><strong>It's a Match!</strong></h2>
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title text-center"><strong>It's a Match!</strong></h2>
+                </div>
+                <div class="modal-body">
+                    <h2 id="match-name"></h2>
+                    <img id="match-img" style="width: 300px; height: 200px; object-fit: contain;"
+                        src="https://media.licdn.com/mpr/mpr/shrinknp_400_400/p/6/005/064/1bd/3435aa3.jpg" alt="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn text-center" data-dismiss="modal"
+                        style="background-color:#F64E65; color:white; width:30%; margin-bottom: 2vh;">Close</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <h2 id="match-name"></h2>
-                <img id="match-img" src="https://media.licdn.com/mpr/mpr/shrinknp_400_400/p/6/005/064/1bd/3435aa3.jpg"
-                    alt="">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn text-center" data-dismiss="modal" style="background-color:#F64E65; color:white; width:30%; margin-bottom: 2vh;">Close</button>
-            </div>
-        </div>
         </div>
     </div>
 
@@ -260,55 +278,42 @@
         $('#submit').on('click', function (event) {
             event.preventDefault();
 
-            // function validateForm() {
-            //     var isValid = true;
-            //     $(".validate").each(function() {
-            //     if ($(this).val() === "") {
-            //         isValid = false;
-            //     }
-            //     });
-
-            //     $(".browser-default custom-select").each(function() {
-
-            //     if ($(this).val() === "") {
-            //         isValid = false;
-            //     }
-            //     });
-            //     return isValid;
-            // }
-
-                        // Create an object for the user"s data
             var newFriend = {
-              name: $("#name").val(),
-              photo: $("#photo").val(),
-              scores: [
-                $("#q1").val(),
-                $("#q2").val(),
-                $("#q3").val(),
-                $("#q4").val(),
-                $("#q5").val(),
-                $("#q6").val(),
-                $("#q7").val(),
-                $("#q8").val(),
-                $("#q9").val(),
-                $("#q10").val()
-              ]
+                name: $("#name").val(),
+                photo: $("#photo").val(),
+                score: [
+                    $("#q1").val(),
+                    $("#q2").val(),
+                    $("#q3").val(),
+                    $("#q4").val(),
+                    $("#q5").val(),
+                    $("#q6").val(),
+                    $("#q7").val(),
+                    $("#q8").val(),
+                    $("#q9").val(),
+                    $("#q10").val()
+                ]
             };
 
-            console.log(newFriend)
+            if (newFriend.name === "" || newFriend.photo === "") {
+                alertify.alert().set('message', 'Please ensure that Name and Photo are entered correctly.').setHeader('Name and Photo are mandatory fields!').show();
+            }
+            else if (newFriend.score.includes("")) {
+                alertify.alert().set('message', 'It seems that you have not answered all the questions.').setHeader('Please review your answers for the Survey!').show();
+            }
+            else {
+                console.log(newFriend)
+                $.post("/api/test", newFriend)
+                    .then(function (data) {
 
-            $.post("/api/test", newFriend)
-                .then(function (data) {
-                                    
-                    $("#match-name").text(data.name);
-                    $("#match-img").attr("src", data.photo);
+                        $("#match-name").text(data.name);
+                        $("#match-img").attr("src", data.photo);
 
-                    // Show the modal with the best match
-                    $("#results-modal").modal("toggle");
+                        // Show the modal with the best match
+                        $("#results-modal").modal("toggle");
 
-                })
-            
-            
+                    })
+            }
         });
     </script>
 

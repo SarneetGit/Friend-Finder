@@ -123,6 +123,7 @@ connection.query(`SELECT * FROM friend_finder_db.friends`, (err, data) => {
     for (let i of friends) {
         i.score = i.score.replace(/\D/g,'').split("")
     }
+    // console.log(friends)
 })
 
 //Routes
@@ -150,36 +151,42 @@ app.get("/api/friends", function(req, res) {
 
 app.post("/api/test", function(req, res) {
     var newFriend = req.body;
-    console.log(newFriend)
+    // console.log(newFriend)
     let outerListDifference = []
     for (let iter in friends) {
         let difference = []
-        for (let i in friends[iter].scores) {
+        //console.log("Line 158" + friends[iter].name)
+        //console.log("Line 159" + friends[iter].score)
+        for (let i in friends[iter].score) {
             // let intI = parseInt(i)
-            console.log(newFriend.scores[i] , friends[iter].scores[i])
+            //console.log('THis code runs')
+            //console.log("Line 161" + newFriend.score[i] , friends[iter].score[i])
             // console.log('line140'+newFriend.scores[intI], i)
-            difference.push(parseInt(newFriend.scores[i]) - parseInt(friends[iter].scores[i]))
+            difference.push(parseInt(newFriend.score[i]) - parseInt(friends[iter].score[i]))
         }
+        //console.log('line 165' + difference)
         outerListDifference.push({difference : Math.abs(difference.reduce((a,b) => a + b, 0)), index : parseInt(iter)})
         outerListDifference.sort((a, b) => (a.difference > b.difference) ? 1 : -1)
+        //console.log("Line 167" + JSON.stringify(outerListDifference))
         // Next I need to push each difference into an array along with the name of the friend from which I will return to the screen the image
     }
     let index = outerListDifference[0].index
+    //console.log("Line 171" + index)
+
     //Add user to DB
-    connection.query('INSERT INTO friends (name, photo, score) VALUES (?, ?, ?);', [newFriend.name, newFriend.photo, newFriend.scores.join("")], function(err, data) {
+    connection.query('INSERT INTO friends (name, photo, score) VALUES (?, ?, ?);', [newFriend.name, newFriend.photo, newFriend.score.join("")], function(err, data) {
         if (err) {
             console.error(err)
             return
         }
         console.log(`Friend ${newFriend.name} was added correctly!`)
     })
-    // test.push(newFriend)
+    friends.push(newFriend)
     //Send this info back to front end to display
-    console.log(outerListDifference[0], friends[index])
+    //console.log(outerListDifference[0], friends[index])
     console.log('New Friend was Added');    
     res.json(friends[index])
 })
-
 
 
 //Start the Server
