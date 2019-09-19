@@ -18,7 +18,7 @@ To use this application, go to the survey and fill out all the required fields. 
 - Calculate best match for user once survey is completed and return that match to the user
 
 ## Nice to Have Requirements
-- Data is stored in MySQL db (querying and inserts)
+- Store user data in MySQL DB (querying and inserts)
 
 ## Technologies Used
 
