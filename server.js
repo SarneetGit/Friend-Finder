@@ -40,7 +40,7 @@ connection.connect(function(err) {
 
 
 
-connection.query(`SELECT * FROM friend_finder_db.friends`, (err, data) => {
+connection.query(`SELECT * FROM friends`, (err, data) => {
     if (err) {
         console.error(err)
         return
